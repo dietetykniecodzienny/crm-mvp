@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head><title>Pacjent</title></head>
-<body>
+<head>
+  <title>Pacjent</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-4">
 <h1>{{ patient.name }}</h1>
-<p>Telefon: {{ patient.phone }}</p>
-<p>E-mail: {{ patient.email }}</p>
-<h2>Wizyty</h2>
-<ul>
+<p><strong>Telefon:</strong> {{ patient.phone }}</p>
+<p><strong>E-mail:</strong> {{ patient.email }}</p>
+<h2 class="mt-4">Wizyty</h2>
+<ul class="list-group mb-3">
 {% for visit in visits %}
-  <li>{{ visit.date }} - {{ visit.note }}</li>
+  <li class="list-group-item">{{ visit.date }} – {{ visit.note }}</li>
 {% endfor %}
 </ul>
 <h3>Dodaj wizytę</h3>
 <form method="post" action="{{ url_for('add_visit', patient_id=patient.id) }}">
-  Data: <input name="date" type="date"><br>
-  Notatka: <input name="note"><br>
-  <input type="submit" value="Dodaj">
+  <div class="mb-3">
+    <input name="date" type="date" class="form-control">
+  </div>
+  <div class="mb-3">
+    <input name="note" placeholder="Notatka" class="form-control">
+  </div>
+  <button class="btn btn-primary">Dodaj</button>
 </form>
-<a href="{{ url_for('index') }}">Powrót</a>
+<a href="{{ url_for('index') }}" class="btn btn-link mt-3">Powrót</a>
 </body>
 </html>
