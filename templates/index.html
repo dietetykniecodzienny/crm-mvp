@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Pacjenci</title></head>
+<body>
+<h1>Lista pacjentów</h1>
+<ul>
+{% for patient in patients %}
+  <li><a href="{{ url_for('patient_detail', patient_id=patient.id) }}">{{ patient.name }}</a></li>
+{% endfor %}
+</ul>
+<h2>Dodaj pacjenta</h2>
+<form method="post" action="{{ url_for('add_patient') }}">
+  Imię i nazwisko: <input name="name"><br>
+  Telefon: <input name="phone"><br>
+  E-mail: <input name="email"><br>
+  <input type="submit" value="Dodaj">
+</form>
+</body>
+</html>
