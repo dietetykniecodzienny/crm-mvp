@@ -2,30 +2,82 @@
 <html>
 <head>
   <title>Pacjenci</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="container mt-4">
-<h1 class="mb-4">Lista pacjentów</h1>
-<ul class="list-group mb-4">
-{% for patient in patients %}
-  <li class="list-group-item">
-    <a href="{{ url_for('patient_detail', patient_id=patient.id) }}">{{ patient.name }}</a>
-  </li>
-{% endfor %}
-</ul>
-<h2>Dodaj pacjenta</h2>
-<form method="post" action="{{ url_for('add_patient') }}">
-  <div class="mb-3">
-    <input name="name" placeholder="Imię i nazwisko" class="form-control">
+<body class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Pacjenci</h1>
+    <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+      <i class="bi bi-person-plus"></i> Dodaj pacjenta
+    </a>
   </div>
-  <div class="mb-3">
-    <input name="phone" placeholder="Telefon" class="form-control">
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for p in patients %}
+    <div class="col">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ p.name }}</h5>
+          <p class="card-text mb-1">
+            <i class="bi bi-telephone"></i> {{ p.phone }}<br>
+            <i class="bi bi-envelope"></i> {{ p.email }}
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <a href="{{ url_for('patient_detail', patient_id=p.id) }}" class="btn btn-primary btn-sm">
+            Szczegóły
+          </a>
+          <a href="#" class="btn btn-outline-secondary btn-sm"
+             data-bs-toggle="modal" data-bs-target="#visitModal-{{ p.id }}">
+            Nowa wizyta
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
-  <div class="mb-3">
-    <input name="email" placeholder="E-mail" class="form-control">
+
+  <!-- Modal Dodaj Pacjenta -->
+  <div class="modal fade" id="addPatientModal" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="post" action="{{ url_for('add_patient') }}" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Nowy pacjent</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input name="name" class="form-control mb-2" placeholder="Imię i nazwisko" required>
+          <input name="phone" class="form-control mb-2" placeholder="Telefon">
+          <input name="email" class="form-control mb-2" placeholder="E-mail">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">Zapisz</button>
+        </div>
+      </form>
+    </div>
   </div>
-  <button class="btn btn-success">Dodaj</button>
-</form>
-<a href="{{ url_for('logout') }}" class="btn btn-link mt-3">Wyloguj się</a>
+
+  <!-- Modal Nowa wizyta (generuj jedno dla każdego pacjenta) -->
+  {% for p in patients %}
+  <div class="modal fade" id="visitModal-{{ p.id }}" tabindex="-1">
+    <div class="modal-dialog">
+      <form method="post" action="{{ url_for('add_visit', patient_id=p.id) }}" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Dodaj wizytę – {{ p.name }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input name="date" type="date" class="form-control mb-2" required>
+          <textarea name="note" class="form-control" placeholder="Notatka"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary">Dodaj</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
